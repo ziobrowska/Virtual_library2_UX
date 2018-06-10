@@ -24,9 +24,9 @@ router.get('/:author_id/:author_name', function (req, res, next) {
 
           if (result3 === null || result3 === undefined || result3.length === 0) {
               // console.log(JSON.stringify(result2[0], null, 2));
-              const message = "Nie znaleziono żadnych książek w biblioteczce";
+              const message = "Błąd wyszukiwania książek w biblioteczce";
               // res.render('resource_not_found', { message: message })
-              res.render('authors', { booksArr: result, author: req.params.author_name, user: req.user, libraryArr:  0, not_libraryArr: 0}) //  0 gdy książek nie ma w biblioteczce
+              res.render('authors', { booksArr: result, author: req.params.author_name, user: req.user, libraryArr:  0, not_libraryArr: result}) //  0 gdy książek nie ma w biblioteczce
 
           } else{
               const queryStatement4 = `SELECT * FROM book_info WHERE book_info.book_id NOT IN (SELECT idbooks FROM book_status where idusers = ${req.user[0].idusers}) AND author_id = ${req.params.author_id} order by author_id, vol_in_series; `;           
@@ -34,9 +34,9 @@ router.get('/:author_id/:author_name', function (req, res, next) {
 
                   if (result4 === null || result4 === undefined || result4.length === 0) {
                       // console.log(JSON.stringify(result2[0], null, 2));
-                      const message = "Nie znaleziono żadnych książek w biblioteczce";
+                      const message = "Błąd wyszukiwania książek poza biblioteczką";
                       // res.render('resource_not_found', { message: message })
-                      res.render('authors', { booksArr: result, author: req.params.author_name, user: req.user, libraryArr: result3, not_libraryArr: 0}) //  0 gdy książek nie ma w biblioteczce
+                      res.render('authors', { booksArr: result, author: req.params.author_name, user: req.user, libraryArr: result, not_libraryArr: 0}) //  0 gdy książek nie ma w biblioteczce
 
                   } 
                   else{
