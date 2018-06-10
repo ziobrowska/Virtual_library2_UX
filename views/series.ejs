@@ -19,13 +19,13 @@
   
         <ul class="nav nav-tabs" role="tablist">
             <li class="nav-item">
-                <a class="nav-link active " href="#all" role="tab" data-toggle="tab"> Wszystkie </a>
+                <a class="nav-link active " href="#all" role="tab" data-toggle="tab"> Wszystkie książki z tej serii</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#out" role="tab" data-toggle="tab"> Książki poza moją biblioteczką </a>
+                <a class="nav-link" href="#out" role="tab" data-toggle="tab"> Poza moją biblioteczką </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#in" role="tab" data-toggle="tab"> Książki w mojej biblioteczce </a>
+                <a class="nav-link" href="#in" role="tab" data-toggle="tab"> Aktualnie w mojej biblioteczce </a>
             </li>
         </ul> <!-- end of tablist -->
       
@@ -51,7 +51,7 @@
                                                 <p class="card-text">
                                                     <strong> <i> <%= book.title %> </i> </strong>
                                                     <br>
-                                                    <a href="/authors/<%= book.author_id %>/<%= book.author %>">                                                             <%= book.author %>                                                         </a>
+                                                    <a href="/authors/<%= book.author_id %>/<%= book.author %>">                                                               <%= book.author %>                                                         </a>
                                                 </p>
                                                 <a href="<%= '/book_profile/'+ book.book_id %>" class="btn btn-info btn-block mt-auto"> Więcej </a>
                                             </div>
@@ -82,7 +82,7 @@
                                                 <p class="card-text">
                                                     <strong> <i> <%= book_in_library.title %> </i> </strong>
                                                     <br>
-                                                    <%= book_in_library.author %>
+                                                    <a href="<%= '/authors/'+ book_in_library.author_id %>">  <%= book_in_library.author %></a> 
                                                 </p>
                                                 <a href="<%= '/book_profile/'+ book_in_library.idbooks %>" class="btn btn-info btn-block mt-auto"> Więcej </a>
                                             </div>
@@ -94,7 +94,8 @@
                         </div>
                     </div>
                 <% } else if ( libraryArr == 0) { %>
-                    <h5> Nie masz książek z tej kategorii w swojej biblioteczce.</h5>
+                    <h5> Nie masz książek z tej serii w swojej biblioteczce.</h5>
+                    <br><br><br>  <br><br><br> <br> 
                 <% } %>
             </div> <!-- end of 'in' -->
   
@@ -213,7 +214,12 @@
                       <!-- <h5> Wszystkie książki z tej kategorii są w Twojej biblioteczce.</h5> -->
                 <% } %>
           <% } else if (not_libraryArr !== undefined &&  not_libraryArr !== null && not_libraryArr == 0){%>
-            <h5> Wszystkie książki z tej kategorii są w Twojej biblioteczce.</h5>
+            <h5> Wszystkie książki z tej kategorii są w Twojej biblioteczce.
+                <br>
+                <br>
+                <a href='/library' class="btn  btn-link"> -> Biblioteczka </a>
+                <br><br>  <br><br><br> <br> 
+            </h5>
          <% } %>
 
           </div> <!-- end of przeczytane -->

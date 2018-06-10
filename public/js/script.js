@@ -35,8 +35,8 @@ $(document).ready(() => {
             </span>
 
             <select name="search_condition" class="form-control btn search_condition">
-                <option value="AND">AND</option>
-                <option value="OR">OR</option>
+                <option value="AND">ORAZ</option>
+                <option value="OR">LUB</option>
             </select>
         </div>`)
 
