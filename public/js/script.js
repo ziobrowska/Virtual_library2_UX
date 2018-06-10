@@ -50,4 +50,42 @@ $(document).ready(() => {
 
     });
 
+
+    $( "#addPict" ).submit(function(event) {
+        event.preventDefault();
+        var photo = $('#USERPhoto').get(0).files.length;
+    
+        if(photo === 0)
+        {
+            var mess='Wybierz zdjęcie.';
+            if($('#ZdAErr').length == 0){
+                $('.USERErr').append('<div id="ZdAErr" class="alert alert-danger" role="alert"><span>'+mess+'</span></div>');
+            } else {
+                $('#ZdAErr span').text(mess);
+            }
+        }else{
+            if($('#ZdAErr').length != 0) {
+                $('#ZdAErr').remove();
+            }
+        }
+    
+        if(photo != 0){
+            var formData = new FormData(this);
+            $.ajax({
+            type: 'POST',
+            url: '/dodajZdiecie',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response){
+                document.location.reload(); 
+                },
+            error: function(response) {
+                alert(response);
+                console.log(response);
+                }
+            });
+        }
+    });
+
 });

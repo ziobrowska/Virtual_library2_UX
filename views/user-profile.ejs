@@ -26,9 +26,16 @@
                 <img src="/images/hermiona.jpg" alt="" class="center-block img-circle img-responsive" id="cat">
             </div>
             <div class="col col-span-6 text-center">
+
+                <img class=" img-thumbnail" src="<%= '/uploads/'+ userData.picture %>" alt="Card image">
                 <div class="user"><strong>Username:</strong> <%= userData.username %></div>
                 <div class="user"><strong>Adres-email:</strong> <%= userData.email %></div>
                 <a href='/library' class="btn btn-lg btn-secondary"> Biblioteczka </a>
+
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                        Zmień lub dodaj zdięcie 
+                </button>
+                
             </div>
         </div>
         <div class="footer">
@@ -43,6 +50,30 @@
         </div>
     </section>
 </div>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Dodaj zdięcie</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <form id="addPict" >
+                    <div class="form-group">
+                        <label for="usernameInput">Zdięcie:</label>
+                        <div class="input-group">
+                            <input type="file" class="form-control-file" id="USERPhoto" name="image" enctype="multipart/form-data">
+                        </div>
+                        <div class="USERErr"  style="margin-top: 5px;" ></div>
+                        </div>
+                    <button id="AddEmpbut" type="submit" class="btn btn-primary">Dodaj</button>
+                </form>
+            </div>
+          </div>
+        </div>
+      </div>
 
 <%- include('footer.ejs') %>
 </body>

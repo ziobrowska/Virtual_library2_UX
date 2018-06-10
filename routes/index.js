@@ -3,6 +3,9 @@ var router = express.Router();
 const auth = require('../authentication/middleware');
 const db = require('../db');
 
+var multer = require('multer');
+var upload = multer({dest: '/uploads'});
+
 // finding books version edvanced 3
 router.post('/find', (req, res) => {
   console.log(JSON.stringify(req.body, null, 2));
@@ -115,6 +118,29 @@ router.get('/', function (req, res, next) {
     }
 
   })
+});
+
+//============file upload functions
+var storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+  cb(null, 'uploads')
+  },
+  filename: function(req, file, cb) {
+  cb(null, new Date().toISOString().replace(/:/g, '-') + file.originalname);
+  }
+ });
+  
+ var upload = multer({
+  storage: storage
+ });
+//============end file upload functions
+
+router.post('/dodajZdiecie', upload.any(),(req, res, next)=>{
+  const queryStatement = `UPDATE users SET picture = "${req.files[0].filename}" WHERE idusers="${req.user[0].idusers}"`;
+  db.query(queryStatement, (error, result) => {
+        
+    res.send('OK');
+})
 });
 
 module.exports = router;
