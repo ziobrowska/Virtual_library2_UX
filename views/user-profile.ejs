@@ -23,18 +23,31 @@
 
         <div class="row">
             <div class="col col-span-6 text-center">
-                <img src="/images/hermiona.jpg" alt="" class="center-block img-circle img-responsive" id="cat">
+                <%if (userData.picture !== null ) { %>
+                    <img class="img-thumbnail" src="<%= '/uploads/'+ userData.picture %>" alt="Card image">
+                    <br>
+                    <br>
+                    <button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#exampleModal">
+                        <i class="fa fa-camera-retro"></i> Zmień zdjęcie
+                    </button>
+                <% } else {%>
+                    <img class="img-thumbnail" src="/images/user.png" alt="Card image">
+                    <br>
+                    <br>
+                    <button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#exampleModal">
+                        <i class="fa fa-camera-retro"></i> Dodaj zdjęcie 
+                    </button>
+                <% }%>
+                
             </div>
             <div class="col col-span-6 text-center">
-
-                <img class=" img-thumbnail" src="<%= '/uploads/'+ userData.picture %>" alt="Card image">
-                <div class="user"><strong>Username:</strong> <%= userData.username %></div>
-                <div class="user"><strong>Adres-email:</strong> <%= userData.email %></div>
-                <a href='/library' class="btn btn-lg btn-secondary"> Biblioteczka </a>
-
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                        Zmień lub dodaj zdięcie 
-                </button>
+                <div class="user"> <h1>Witaj,  <%= userData.username %></h1><hr><br><br>
+               
+                <i class="fa fa-credit-card"></i> TRIAL, zostało <strong> 14 </strong> dni. <br><br>
+                <i class="fa fa-envelope"></i> <%= userData.email %></div>
+                <br>
+                <a href='/library' class="btn  btn-link"> -> Biblioteczka </a>
+                <br>
                 
             </div>
         </div>
