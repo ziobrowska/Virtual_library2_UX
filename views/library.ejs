@@ -52,7 +52,7 @@
 
                                             <div class="card text-center">
                                                 <br>
-                                                <a href="book_read.ejs" title="Czytaj >>">
+                                                <a href="/book_read/<%= book.book_id %>" title="Czytaj >>">
                                                     <img class="card-img-top img-fluid mx-auto d-block" src="/<%= book.image %>" alt="<%= book.title + " " + ' image' %>">
                                                 </a>
                                                 <div class="card-body d-flex flex-column">
@@ -93,7 +93,7 @@
                                             console.log(to_read);%>
                                             <div class="card text-center">
                                                 <br>
-                                                <a href="book_read.ejs" title="Czytaj >>">
+                                                <a href="/book_read/<%= book.book_id %>" title="Czytaj >>">
                                                     <img class="card-img-top img-fluid mx-auto d-block" src="/<%= book.image %>" alt="<%= book.title + " " + ' image' %>">
                                                 </a>
                                                 <div class="card-body d-flex flex-column">
@@ -132,7 +132,7 @@
                                             console.log(read);%>
                                             <div class="card text-center">
                                                 <br>
-                                                <a href="book_read.ejs" title="Czytaj >>">
+                                                <a href="/book_read/<%= book.book_id %>" title="Czytaj >>">
                                                     <img class="card-img-top img-fluid mx-auto d-block" src="/<%= book.image %>" alt="<%= book.title + " " + ' image' %>">
                                                 </a>
                                                 <div class="card-body d-flex flex-column">
