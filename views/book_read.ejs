@@ -5,59 +5,119 @@
 
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.5/jszip.min.js"></script>
-    <script src="../dist/epub.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/epubjs/dist/epub.js"></script>
+    <link rel='stylesheet' href='/stylesheets/examples.css' />
 </head>
 <body>
 
-<div id="area"></div>
+    <select id="toc"></select>
+    <div id="viewer" class="spreads"></div>
+    <a id="prev" href="#prev" class="arrow">‹</a>
+    <a id="next" href="#next" class="arrow">›</a>
 
 
 <script>
-    var book = ePub("https://s3.amazonaws.com/moby-dick/moby-dick.epub");
-    var rendition = book.renderTo("area", {width: 600, height: 400});
-    var displayed = rendition.display();
-
-    EPUBJS.Hooks.register("beforeChapterDisplay").pageTurns = function (callback, renderer) {
-        var lock = false;
-        var arrowKeys = function (e) {
-            e.preventDefault();
-            if (lock) return;
-
-            if (e.keyCode == 37) {
-                ePubViewer.Book.prevPage();
-                lock = true;
-                setTimeout(function () {
-                    lock = false;
-                }, 100);
-                return false;
-            }
-
-            if (e.keyCode == 39) {
-                ePubViewer.Book.nextPage();
-                lock = true;
-                setTimeout(function () {
-                    lock = false;
-                }, 100);
-                return false;
-            }
-
-        };
-        renderer.doc.addEventListener('keydown', arrowKeys, false);
-        if (callback) callback();
-    }
-
-    const width = 600;
-    const height = 400;
-
-    book.generatePagination().then(function () {
-        console.log("The pagination has been generated");
+    var params = URLSearchParams && new URLSearchParams(document.location.search.substring(1));
+    var url = params && params.get("url") && decodeURIComponent(params.get("url"));
+    var currentSectionIndex = (params && params.get("loc")) ? params.get("loc") : undefined;
+    //alert("<%= book.text%>");
+    // Load the opf
+    //var book = ePub(url || "https://s3.amazonaws.com/moby-dick/moby-dick.epub");
+    var book = ePub(url || "http://localhost:3000/<%= book.text%>");
+    var rendition = book.renderTo("viewer", {
+      width: "100%",
+      height: 600,
+      spread: "always"
     });
-
-    book.generatePagination(width, height).then(function () {
-        console.log("The pagination has been generated");
+    rendition.display(currentSectionIndex);
+    book.ready.then(() => {
+      var next = document.getElementById("next");
+      next.addEventListener("click", function(e){
+        book.package.metadata.direction === "rtl" ? rendition.prev() : rendition.next();
+        e.preventDefault();
+      }, false);
+      var prev = document.getElementById("prev");
+      prev.addEventListener("click", function(e){
+        book.package.metadata.direction === "rtl" ? rendition.next() : rendition.prev();
+        e.preventDefault();
+      }, false);
+      var keyListener = function(e){
+        // Left Key
+        if ((e.keyCode || e.which) == 37) {
+          book.package.metadata.direction === "rtl" ? rendition.next() : rendition.prev();
+        }
+        // Right Key
+        if ((e.keyCode || e.which) == 39) {
+          book.package.metadata.direction === "rtl" ? rendition.prev() : rendition.next();
+        }
+      };
+      rendition.on("keyup", keyListener);
+      document.addEventListener("keyup", keyListener, false);
+    })
+    var title = document.getElementById("title");
+    rendition.on("rendered", function(section){
+      var current = book.navigation && book.navigation.get(section.href);
+      if (current) {
+        var $select = document.getElementById("toc");
+        var $selected = $select.querySelector("option[selected]");
+        if ($selected) {
+          $selected.removeAttribute("selected");
+        }
+        var $options = $select.querySelectorAll("option");
+        for (var i = 0; i < $options.length; ++i) {
+          let selected = $options[i].getAttribute("ref") === current.href;
+          if (selected) {
+            $options[i].setAttribute("selected", "");
+          }
+        }
+      }
     });
-    book.pagination.pageFromCfi(book.getCurrentLocationCfi());
+    rendition.on("relocated", function(location){
+      console.log(location);
+      var next = book.package.metadata.direction === "rtl" ?  document.getElementById("prev") : document.getElementById("next");
+      var prev = book.package.metadata.direction === "rtl" ?  document.getElementById("next") : document.getElementById("prev");
+      if (location.atEnd) {
+        next.style.visibility = "hidden";
+      } else {
+        next.style.visibility = "visible";
+      }
+      if (location.atStart) {
+        prev.style.visibility = "hidden";
+      } else {
+        prev.style.visibility = "visible";
+      }
+    });
+    rendition.on("layout", function(layout) {
+      let viewer = document.getElementById("viewer");
+      if (layout.spread) {
+        viewer.classList.remove('single');
+      } else {
+        viewer.classList.add('single');
+      }
+    });
+    window.addEventListener("unload", function () {
+      console.log("unloading");
+      this.book.destroy();
+    });
+    book.loaded.navigation.then(function(toc){
+			var $select = document.getElementById("toc"),
+					docfrag = document.createDocumentFragment();
+			toc.forEach(function(chapter) {
+				var option = document.createElement("option");
+				option.textContent = chapter.label;
+				option.setAttribute("ref", chapter.href);
+				docfrag.appendChild(option);
+			});
+			$select.appendChild(docfrag);
+			$select.onchange = function(){
+					var index = $select.selectedIndex,
+							url = $select.options[index].getAttribute("ref");
+					rendition.display(url);
+					return false;
+			};
+		});
+
+
 </script>
 
 
